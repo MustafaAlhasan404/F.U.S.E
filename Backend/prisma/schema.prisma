@@ -1,0 +1,203 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  role      Role
+  name      String
+  email     String   @unique
+  phone     String   @unique
+  birth     DateTime
+  status    userStatus @default(Created)
+  password  String
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  sentReq   Beneficiaries[] @relation("SentRequests")
+  recvReq   Beneficiaries[] @relation("ReceivedRequests")
+  accounts  Accounts[]
+  merchant  Merchant?
+  customer  Customer?
+  cashTransactions CashTransactions[]
+}
+
+model Merchant {
+  id          Int     @id @default(autoincrement())
+  userId      Int     @unique
+  categoryId  Int
+  workPermit  String
+
+  user        Users    @relation(fields: [userId], references: [id])
+  Category    MerchantCategory    @relation(fields: [categoryId], references: [id])
+}
+
+model Customer {
+  id            Int     @id @default(autoincrement())
+  userId        Int     @unique
+  monthlyIncome  Float
+
+  user     Users    @relation(fields: [userId], references: [id])
+}
+
+model Beneficiaries {
+  id             Int      @id @default(autoincrement())
+  requstUser     Int
+  acceptUser     Int
+  accepted       Boolean?
+  createdAt      DateTime @default(now())
+
+  userR     Users   @relation("SentRequests", fields: [requstUser], references: [id])
+  userA     Users   @relation("ReceivedRequests", fields: [acceptUser], references: [id])
+}
+
+model Accounts {
+  id        String              @id 
+  userId    Int     
+  name      String     
+  balance   Float               @default(0)
+  type      AccountType         @default(Checking)
+  status    AccountStatus       @default(Active)
+  createdAt DateTime            @default(now())
+
+  user     Users                @relation(fields: [userId], references: [id])
+  transS   Transactions[]       @relation("source")
+  transD   Transactions[]       @relation("destination")
+  trans    CashTransactions[]
+  card     Cards[]
+  bills    Bills[]
+}
+
+model Cards {
+  id            String     @id
+  cardName      String
+  accountNumber String
+  balance       Float
+  cvv           Int
+  PIN           String     @db.VarChar(4)
+  expiryDate    DateTime   @default(dbgenerated("NOW() + interval '2 years'"))
+  physical      Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+
+  account       Accounts   @relation(fields: [accountNumber], references: [id])
+  bills         Bills[]
+}
+
+model CashTransactions {
+  id                 Int                @id @default(autoincrement())
+  supervisorId       Int
+  accountNumber      String
+  type               TransactionType
+  amount             Float
+  status             TransactionStatus  @default(Pending)
+  createdAt          DateTime           @default(now())
+
+  supervisor           Users      @relation(fields: [supervisorId], references: [id])
+  account      Accounts   @relation(fields: [accountNumber], references: [id])
+}
+
+model Transactions {
+  id                 Int                @id @default(autoincrement())
+  sourceAccount      String?
+  destinationAccount String
+  type               TransactionType
+  amount             Float
+  status             TransactionStatus  @default(Pending)
+  createdAt          DateTime           @default(now())
+
+  sAccount     Accounts?   @relation("source", fields: [sourceAccount], references: [id])
+  dAccount     Accounts   @relation("destination", fields: [destinationAccount], references: [id])
+  details      TransactionsDetails[]
+}
+
+model Bills {
+  id                       Int                @id @default(autoincrement())
+  cardId                   String?
+  merchantAccountNumber    String
+  category                 String
+  amount                   Float
+  details                  String
+  status             TransactionStatus  @default(Pending)
+  payedAt            DateTime?
+  createdAt          DateTime           @default(now())
+
+  card                Cards?        @relation(fields: [cardId], references: [id])
+  merchantAccount     Accounts   @relation(fields: [merchantAccountNumber], references: [id])
+}
+
+model TransactionsDetails {
+  id              Int          @id @default(autoincrement())
+  transactionId   Int
+  details         String
+
+  transaction        Transactions  @relation(fields: [transactionId], references: [id])
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  endpoint  String
+  body      String
+  status    Int
+  userID    Int?
+  message   String?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  Admin
+  Customer
+  Merchant
+  Vendor
+  Employee
+}
+
+enum AccountType {
+  Checking
+  Investment
+  Savings
+}
+
+enum AccountStatus {
+  Active
+  Inactive
+  Blocked
+  Locked
+  Suspended
+}
+
+enum TransactionType {
+  Transfer
+  Bill
+  Deposit
+  Withdraw
+}
+
+enum TransactionStatus {
+  Pending
+  Cancelled
+  Declined
+  Failed
+  Completed
+  Refunded
+  Deleted
+  Paid
+}
+
+model MerchantCategory {
+  id    Int      @id @default(autoincrement())
+  name  String
+
+  merchants Merchant[]
+}
+
+enum userStatus {
+  Created
+  Deleted
+  Baned
+  Stopped
+}

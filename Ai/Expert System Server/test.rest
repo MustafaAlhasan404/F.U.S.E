@@ -1,0 +1,79 @@
+POST http://localhost:5000/budget
+Content-Type: application/json
+
+{
+    "income": 4450,
+    "expenses": [
+        {"category": "Rent/Mortgage", "amount": 1500, "priority": "High"},
+        {"category": "Healthcare", "amount": 300, "priority": "High"},
+        {"category": "Insurance", "amount": 200, "priority": "High"},
+        {"category": "Utilities", "amount": 100, "priority": "High"},
+        {"category": "Food/Groceries", "amount": 400, "priority": "High"},
+        {"category": "Childcare", "amount": 250, "priority": "High"},
+        {"category": "Transportation", "amount": 150, "priority": "High"},
+        {"category": "Personal Spending", "amount": 100, "priority": "Low"},
+        {"category": "Home Goods", "amount": 80, "priority": "Low"},
+        {"category": "Clothing", "amount": 60, "priority": "Low"},
+        {"category": "Pets", "amount": 50, "priority": "Low"},
+        {"category": "Restaurants", "amount": 70, "priority": "Low"},
+        {"category": "Travel & Entertainment", "amount": 90, "priority": "Low"},
+        {"category": "Electronics", "amount": 120, "priority": "Low"},
+        {"category": "Beauty Products", "amount": 40, "priority": "Low"},
+        {"category": "Services", "amount": 30, "priority": "Low"},
+        {"category": "Subscriptions", "amount": 100, "priority": "Low"}
+    ]
+}
+
+###
+POST http://localhost:5000/budget
+Content-Type: application/json
+
+{
+    "income": 10000,
+    "expenses": [
+        {"category": "Rent/Mortgage", "amount": 3000, "priority": "High"},
+        {"category": "Healthcare", "amount": 1500, "priority": "High"},
+        {"category": "Insurance", "amount": 800, "priority": "High"},
+        {"category": "Utilities", "amount": 600, "priority": "High"},
+        {"category": "Food/Groceries", "amount": 1200, "priority": "High"},
+        {"category": "Childcare", "amount": 1000, "priority": "High"},
+        {"category": "Transportation", "amount": 700, "priority": "Medium"},
+        {"category": "Personal Spending", "amount": 500, "priority": "Medium"},
+        {"category": "Home Goods", "amount": 400, "priority": "Medium"},
+        {"category": "Clothing", "amount": 300, "priority": "Medium"},
+        {"category": "Pets", "amount": 200, "priority": "Medium"},
+        {"category": "Restaurants", "amount": 500, "priority": "Low"},
+        {"category": "Travel & Entertainment", "amount": 600, "priority": "Low"},
+        {"category": "Electronics", "amount": 700, "priority": "Low"},
+        {"category": "Beauty Products", "amount": 300, "priority": "Low"},
+        {"category": "Services", "amount": 200, "priority": "Low"},
+        {"category": "Subscriptions", "amount": 100, "priority": "Low"}
+    ]
+}
+
+###
+POST http://localhost:5000/budget
+Content-Type: application/json
+
+{
+    "income": 10000,
+    "expenses": [
+        {"category": "Rent/Mortgage", "amount": 3000, "priority": "High"},
+        {"category": "Healthcare", "amount": 1500, "priority": "High"},
+        {"category": "Insurance", "amount": 800, "priority": "High"},
+        {"category": "Utilities", "amount": 600, "priority": "High"},
+        {"category": "Food/Groceries", "amount": 1200, "priority": "High"},
+        {"category": "Childcare", "amount": 1000, "priority": "High"},
+        {"category": "Transportation", "amount": 700, "priority": "Medium"},
+        {"category": "Personal Spending", "amount": 500, "priority": "Medium"},
+        {"category": "Home Goods", "amount": 400, "priority": "Medium"},
+        {"category": "Clothing", "amount": 300, "priority": "Medium"},
+        {"category": "Pets", "amount": 200, "priority": "Medium"},
+        {"category": "Restaurants", "amount": 500, "priority": "Low"},
+        {"category": "Travel & Entertainment", "amount": 600, "priority": "Low"},
+        {"category": "Electronics", "amount": 700, "priority": "Low"},
+        {"category": "Beauty Products", "amount": 300, "priority": "Low"},
+        {"category": "Services", "amount": 200, "priority": "Low"},
+        {"category": "Subscriptions", "amount": 100, "priority": "Low"}
+    ]
+}
