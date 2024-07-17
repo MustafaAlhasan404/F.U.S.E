@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "F.U.S.E",
+    "slug": "fuse",
+    "version": "3.1.3",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fusemobile.fuse"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.NFC",
+        "android.permission.NFC_TRANSACTION_EVENT",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.mustafa_alhasan12.FUSEEXPO"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      ["react-native-nfc-manager"],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow F.U.S.E. to access your camera.",
+          "microphonePermission": "Allow F.U.S.E. to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ],
+            [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow F.U.S.E. to use Face ID."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3b00f604-e8aa-4126-a59b-91b1e8d978d0"
+      }
+    },
+    "owner": "fuse-mobile",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3b00f604-e8aa-4126-a59b-91b1e8d978d0"
+    }
+  }
+}

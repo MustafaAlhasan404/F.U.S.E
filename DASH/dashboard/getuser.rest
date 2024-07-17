@@ -1,0 +1,13 @@
+### Login
+POST https://fuse-backend-x7mr.onrender.com/auth/login
+Content-Type: application/json
+
+{
+  "payload": {
+    "password": "<PASSWORD>"
+    "email": "emily@example.com"
+  }
+}
+
+### Get Card Data
+GET https://fuse-backend-x7mr.onrender.com/card
