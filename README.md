@@ -1,8 +1,8 @@
 # Financial Universal Service Ecosystem
 
-<div style="text-align: center;">
-  <img src="FUSE-EXPO\assets\Fourth.jpg" alt="FUSE" width="200"/>
-</div>
+<figure style="text-align: center;">
+  <img src="FUSE-EXPO/assets/Fourth.jpg" alt="FUSE" width="300" style="border-radius: 15px;"/>
+</figure>
 
 ## Overview
 
