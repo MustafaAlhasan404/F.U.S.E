@@ -76,7 +76,7 @@ const Signup = () => {
   const [hasNumber, setHasNumber] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
 
-  const backgroundColor = theme === 'light' ? '#FFFFFF' : '#303030';
+  const backgroundColor = theme === 'light' ? '#FFFFFF' : '#1A1A1A';
   const textColor = theme === 'light' ? '#1F1F1F' : '#FFFFFF';
   const borderColor = theme === 'light' ? '#CCCCCC' : '#444444';
   const placeholderColor = theme === 'light' ? '#999999' : '#A0A0A0';

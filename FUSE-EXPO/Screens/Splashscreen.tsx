@@ -94,7 +94,7 @@ const Splashscreen = () => {
         outputRange: ['0deg', '360deg', '0deg'],
     });
 
-    const backgroundColor = theme === 'light' ? '#FFFFFF' : '#303030';
+    const backgroundColor = theme === 'light' ? '#FFFFFF' : '#1A1A1A';
     const statusBarStyle = theme === 'light' ? 'dark-content' : 'light-content';
 
     const logoSource = theme === 'light' 
@@ -206,7 +206,7 @@ export default Splashscreen;
 //         outputRange: ['0deg', '360deg'],
 //     });
 
-//     const backgroundColor = theme === 'light' ? '#FFFFFF' : '#303030';
+//     const backgroundColor = theme === 'light' ? '#FFFFFF' : '#1A1A1A';
 //     const statusBarStyle = theme === 'light' ? 'dark-content' : 'light-content';
 
 //     return (

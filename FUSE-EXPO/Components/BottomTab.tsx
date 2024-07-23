@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, Platform } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import tw from 'twrnc';
 import { useTheme } from '../ThemeContext';
 import { useRoute } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface BottomTabProps {
   navigation: any;
@@ -17,7 +18,7 @@ const BottomTab: React.FC<BottomTabProps> = ({ navigation }) => {
     navigation.navigate(screen);
   };
 
-  const backgroundColor = theme === 'light' ? '#FFFFFF' : '#303030';
+  const backgroundColor = theme === 'light' ? '#FFFFFF' : '#1A1A1A';
   const activeColor = theme === 'light' ? '#028174' : '#65e991';
   const inactiveColor = theme === 'light' ? '#888888' : '#AAAAAA';
 
@@ -27,26 +28,64 @@ const BottomTab: React.FC<BottomTabProps> = ({ navigation }) => {
   };
 
   const tabs = [
-    { name: 'Home', icon: 'home-outline', label: 'Home' },
-    { name: 'MyCard', icon: 'card-outline', label: 'My Cards' },
-    { name: 'MyExpenses', icon: 'wallet-outline', label: 'Expenses' },
-    { name: 'TransactionHistory', icon: 'swap-horizontal-outline', label: 'History' },
-    { name: 'Profile', icon: 'person-outline', label: 'Profile' },
+    { name: 'Home', icon: 'home', label: 'Home' },
+    { name: 'MyCard', icon: 'card', label: 'My Cards' },
+    { name: 'TransactionHistory', icon: 'swap-horizontal', label: 'History' },
+    { name: 'Profile', icon: 'person', label: 'Profile' },
   ];
 
   return (
-    <View style={[tw`flex-row justify-around items-center h-16 w-full shadow-md`, { backgroundColor }]}>
-      {tabs.map((tab) => (
-        <TouchableOpacity
-          key={tab.name}
-          style={tw`flex-1 items-center justify-center p-2`}
-          onPress={() => handlePress(tab.name)}
-        >
-          <Ionicons name={tab.icon} size={28} color={getTabStyle(tab.name)} />
-          <Text style={[tw`mt-1 text-xs font-semibold`, { color: getTabStyle(tab.name) }]}>{tab.label}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+    <LinearGradient
+      colors={theme === 'light' ? ['#FFFFFF', '#F0F0F0'] : ['#303030', '#202020']}
+      style={[
+        tw`rounded-t-3xl shadow-lg`,
+        Platform.OS === 'android' ? tw`h-18` : tw`h-28`
+      ]}
+    >
+      <View style={tw`flex-row justify-around items-center w-full h-full`}>
+        {tabs.map((tab) => {
+          const isActive = route.name === tab.name;
+          return (
+            <TouchableOpacity
+              key={tab.name}
+              style={tw`flex-1 items-center justify-center p-2`}
+              onPress={() => handlePress(tab.name)}
+            >
+              <View style={tw`relative`}>
+                {isActive && (
+                  <View
+                    style={[
+                      tw`absolute -inset-3 rounded-full opacity-20`,
+                      { backgroundColor: activeColor }
+                    ]}
+                  />
+                )}
+                <Ionicons
+                  name={isActive ? tab.icon : `${tab.icon}-outline`}
+                  size={Platform.OS === 'android' ? 20 : 28}
+                  color={getTabStyle(tab.name)}
+                  style={tw`z-10`}
+                />
+              </View>
+              <View style={tw`flex-row items-center mb-4 mt-3`}>
+                {isActive && (
+                  <View style={[tw`w-1.5 h-1.5 rounded-full mr-1`, { backgroundColor: activeColor }]} />
+                )}
+                <Text
+                  style={[
+                    tw`text-xs font-bold`,
+                    { color: getTabStyle(tab.name) },
+                    isActive && Platform.OS === 'ios' && tw`text-sm`,
+                  ]}
+                >
+                  {tab.label}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </LinearGradient>
   );
 };
 

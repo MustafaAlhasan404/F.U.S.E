@@ -5,7 +5,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import Login from './Screens/Login';
 import Signup from './Screens/Signup';
 import Home from './Screens/Home';
-import MyExpenses from './Screens/MyExpenses'; // Import MyExpenses
+// import MyExpenses from './Screens/MyExpenses'; // Import MyExpenses
 import Profile from './Screens/profile';
 import MyCard from './Screens/MyCards';
 import TransactionHistory from './Screens/TransactionHistory'; // Import TransactionHistory
@@ -64,10 +64,10 @@ const AppNavigator = () => {
           name="Signup"
           component={Signup}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="MyExpenses"
           component={MyExpenses}
-        />
+        /> */}
         <Stack.Screen
           name="Profile"
           component={Profile}

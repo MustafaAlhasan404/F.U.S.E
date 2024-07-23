@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StatusBar, TouchableOpacity, Modal, Platform } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StatusBar, TouchableOpacity, Modal, Platform, SafeAreaView, ScrollView, RefreshControl, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import QRCodeStyled from 'react-native-qrcode-styled';
 import BottomTab from '../Components/BottomTab';
 import { useTheme } from '../ThemeContext';
@@ -25,6 +25,7 @@ const Receive: React.FC<{ route: any }> = ({ route }) => {
     const [logoBase64, setLogoBase64] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [account, setAccount] = useState<object>({});
+    const [refreshing, setRefreshing] = useState<boolean>(false);
 
     const user = useSelector((state: any) => state.auth.user);
     const role = useSelector((state: any) => state.auth.role);
@@ -33,6 +34,12 @@ const Receive: React.FC<{ route: any }> = ({ route }) => {
     const aesKey: string = useSelector((state: any) => state.auth.aesKey);
 
     const primaryColor = theme === 'light' ? '#006e63' : '#65e991';
+
+    const backgroundColor = theme === 'light' ? '#FFFFFF' : '#1A1A1A';
+    const textColor = theme === 'light' ? '#333333' : '#DDDDDD';
+    const cardBackgroundColor = theme === 'light' ? '#F0F0F0' : '#424242';
+    const buttonBackgroundColor = theme === 'light' ? '#94B9C5' : '#94B9C5';
+    const buttonTextColor = theme === 'light' ? 'text-white' : 'text-black';
 
     useEffect(() => {
         const loadLogo = async () => {
@@ -47,30 +54,32 @@ const Receive: React.FC<{ route: any }> = ({ route }) => {
         loadLogo();
     }, []);
 
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post(`${baseUrl}/account/user/${id}`, { jwt });
+            const decryptedPayload = decryptData(response.data.payload, aesKey);
+            setAccount(decryptedPayload);
+            setLoading(false);
+        } catch (error: any) {
+            console.error('Error fetching data', error);
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.post(`${baseUrl}/account/user/${id}`, { jwt });
-                const decryptedPayload = decryptData(response.data.payload, aesKey);
-                setAccount(decryptedPayload);
-
-                setLoading(false);
-            } catch (error: any) {
-                // alert('Error', error.response.data.message);
-                console.error('Error fetching data', error);
-                setLoading(false);
-            }
-        };
-
         fetchData();
     }, []);
 
-    const backgroundColor = theme === 'light' ? '#FFFFFF' : '#303030';
-    const textColor = theme === 'light' ? '#333333' : '#DDDDDD';
-    const cardBackgroundColor = theme === 'light' ? '#F0F0F0' : '#424242';
-    const buttonBackgroundColor = theme === 'light' ? '#94B9C5' : '#94B9C5';
-    const buttonTextColor = theme === 'light' ? 'text-white' : 'text-black';
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        try {
+            await fetchData();
+        } catch (error) {
+            console.error('Error refreshing data:', error);
+        }
+        setRefreshing(false);
+    }, []);
 
     const CustomButton = ({ title, onPress, iconName }: { title: string, onPress: () => void, iconName: string }) => (
         <TouchableOpacity
@@ -104,7 +113,7 @@ const Receive: React.FC<{ route: any }> = ({ route }) => {
             console.error('Logo base64 data is not loaded yet');
             return;
         }
-    
+
         const htmlContent = `
             <html>
             <body>
@@ -121,7 +130,7 @@ const Receive: React.FC<{ route: any }> = ({ route }) => {
             </body>
             </html>
         `;
-    
+
         try {
             const { uri } = await Print.printToFileAsync({ html: htmlContent });
             const fileName = `AccountDetails_${user.name.replace(/\s+/g, '_')}.pdf`;
@@ -133,86 +142,98 @@ const Receive: React.FC<{ route: any }> = ({ route }) => {
             await Sharing.shareAsync(newUri);
         } catch (error) {
             console.error('Error generating or sharing PDF:', error);
-            // You might want to show an error message to the user here
         }
     };
-    
 
     return (
-        <View style={[tw`flex-1`, { backgroundColor }]}>
-            <StatusBar barStyle={theme === 'light' ? 'dark-content' : 'light-content'} backgroundColor={backgroundColor} />
-            <View style={tw`flex-1 p-2`}>
-                <View style={tw`flex-row items-center mt-4 mx-4 py-2`}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={tw`mr-2`}>
-                        <Icon name="arrow-left" size={28} color={theme === 'light' ? '#000000' : '#FFFFFF'} />
-                    </TouchableOpacity>
-                    <Text style={[tw`text-2xl font-bold`, { color: theme === 'light' ? '#000000' : '#FFFFFF' }]}>Account Details</Text>
-                </View>
-                <View style={tw`p-5`}>
-                    <View style={tw`mt-2 items-center`}>
-                        {account.id && <View style={tw`bg-white rounded-full`}>
-                            <QRCodeStyled
-                                data={account.id.toString()}
-                                style={[tw`rounded-2xl`, { backgroundColor: 'white' }]}
-                                padding={20}
-                                pieceSize={8}
-                                pieceCornerType='rounded'
-                                pieceBorderRadius={3}
-                                isPiecesGlued={true}
-                            />
-                        </View>}
-                    </View>
-                    <Text style={[tw`text-base mt-10`, { color: textColor }]}>
-                        This is your personal QR Code, you can use it to receive transfers from others by simply showing it to the sender's scanner.
-                    </Text>
-                    <Text style={[tw`text-base mt-10 mb-2`, { color: textColor }]}>
-                        or you can share your account details instead
-                    </Text>
-                    <TouchableOpacity
-                        style={{ backgroundColor: primaryColor, padding: 16, borderRadius: 8, alignItems: 'center' }}
-                        onPress={() => setAccountDetailsModalVisible(true)}
-                    >
-                        <Text style={[tw`text-base font-bold`, { color: theme === 'light' ? '#FFFFFF' : '#000000' }]}>
-                            Show Account Details
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <BottomTab navigation={navigation} />
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={accountDetailsModalVisible}
-                onRequestClose={() => {
-                    setAccountDetailsModalVisible(!accountDetailsModalVisible);
-                }}
-            >
-                <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-75`}>
-                    <View style={[tw`w-11/12 p-5 rounded-xl`, { backgroundColor: cardBackgroundColor }]}>
-                        <View style={tw`flex-row justify-between items-center w-full`}>
-                            <Text style={[tw`text-2xl font-bold`, { color: textColor }]}>
-                                Account Details
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={[tw`flex-1`, { backgroundColor }]}>
+                <SafeAreaView style={[tw`flex-1`, { backgroundColor }]}>
+                    <StatusBar barStyle={theme === 'light' ? 'dark-content' : 'light-content'} backgroundColor={backgroundColor} />
+                    <View style={tw`flex-1 p-2`}>
+                        <View style={tw`flex-row items-center mt-4 mx-4 py-2`}>
+                            <TouchableOpacity onPress={() => navigation.goBack()} style={tw`mr-2`}>
+                                <Icon name="arrow-left" size={28} color={theme === 'light' ? '#000000' : '#FFFFFF'} />
+                            </TouchableOpacity>
+                            <Text style={[tw`text-2xl font-bold`, { color: theme === 'light' ? '#000000' : '#FFFFFF' }]}>Account Details</Text>
+                        </View>
+                        <ScrollView
+                            style={tw`p-5`}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                    colors={[textColor]}
+                                    tintColor={textColor}
+                                />
+                            }
+                        >
+                            <View style={tw`mt-2 items-center`}>
+                                {account.id && <View style={tw`bg-white rounded-full`}>
+                                    <QRCodeStyled
+                                        data={account.id.toString()}
+                                        style={[tw`rounded-2xl`, { backgroundColor: 'white' }]}
+                                        padding={20}
+                                        pieceSize={8}
+                                        pieceCornerType='rounded'
+                                        pieceBorderRadius={3}
+                                        isPiecesGlued={true}
+                                    />
+                                </View>}
+                            </View>
+                            <Text style={[tw`text-base mt-10`, { color: textColor }]}>
+                                This is your personal QR Code, you can use it to receive transfers from others by simply showing it to the sender's scanner.
+                            </Text>
+                            <Text style={[tw`text-base mt-10 mb-2`, { color: textColor }]}>
+                                or you can share your account details instead
                             </Text>
                             <TouchableOpacity
-                                style={tw`p-2`}
-                                onPress={() => setAccountDetailsModalVisible(false)}
+                                style={{ backgroundColor: primaryColor, padding: 16, borderRadius: 8, alignItems: 'center' }}
+                                onPress={() => setAccountDetailsModalVisible(true)}
                             >
-                                <Icon name="x" size={28} color={textColor} />
+                                <Text style={[tw`text-base font-bold`, { color: theme === 'light' ? '#FFFFFF' : '#000000' }]}>
+                                    Show Account Details
+                                </Text>
                             </TouchableOpacity>
-                        </View>
-                        {/* Account Details Text */}
-                        {!loading && <View style={tw`my-4`}>
-                            <AccountDetail title='Account Holder' content={user.name} />
-                            <AccountDetail title='Account Number' content={account.id} />
-                            <AccountDetail title='Type' content={account.type} />
-                            <AccountDetail title='Status' content={account.status} />
-                        </View>}
-                        <ModalButton title="Share" onPress={generatePDF} iconName="share" />
+                        </ScrollView>
                     </View>
-                </View>
-            </Modal>
-        </View >
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={accountDetailsModalVisible}
+                        onRequestClose={() => {
+                            setAccountDetailsModalVisible(!accountDetailsModalVisible);
+                        }}
+                    >
+                        <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-75`}>
+                            <View style={[tw`w-11/12 p-5 rounded-xl`, { backgroundColor: cardBackgroundColor }]}>
+                                <View style={tw`flex-row justify-between items-center w-full`}>
+                                    <Text style={[tw`text-2xl font-bold`, { color: textColor }]}>
+                                        Account Details
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={tw`p-2`}
+                                        onPress={() => setAccountDetailsModalVisible(false)}
+                                    >
+                                        <Icon name="x" size={28} color={textColor} />
+                                    </TouchableOpacity>
+                                </View>
+                                {!loading && <View style={tw`my-4`}>
+                                    <AccountDetail title='Account Holder' content={user.name} />
+                                    <AccountDetail title='Account Number' content={account.id} />
+                                    <AccountDetail title='Type' content={account.type} />
+                                    <AccountDetail title='Status' content={account.status} />
+                                </View>}
+                                <ModalButton title="Share" onPress={generatePDF} iconName="share" />
+                            </View>
+                        </View>
+                    </Modal>
+                </SafeAreaView>
+
+                <BottomTab navigation={navigation} />
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 

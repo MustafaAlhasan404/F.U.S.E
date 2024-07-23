@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, View, Text, TouchableOpacity, Alert, ActivityIndicator, Image } from 'react-native';
+import { Keyboard,StatusBar, View, Text, TouchableOpacity, Alert, ActivityIndicator, Image,SafeAreaView,TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../AppNavigator';
@@ -36,7 +36,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   // Conditional styling based on theme
-  const backgroundColor = theme === 'light' ? '#FFFFFF' : '#303030';
+  const backgroundColor = theme === 'light' ? '#FFFFFF' : '#1A1A1A';
   const textColor = theme === 'light' ? '#1F1F1F' : '#FFFFFF';
   const borderColor = theme === 'light' ? '#CCCCCC' : '#444444';
   const placeholderColor = theme === 'light' ? '#999999' : '#A0A0A0';
@@ -186,6 +186,8 @@ const Login = () => {
   };
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <SafeAreaView style={{flex:1, backgroundColor:backgroundColor}}>
     <View style={{ flex: 1, backgroundColor, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
       <StatusBar backgroundColor={backgroundColor} barStyle={theme === 'light' ? 'dark-content' : 'light-content'} />
       <View style={{ width: '100%', maxWidth: 400, padding: 24 }}>
@@ -276,6 +278,8 @@ const Login = () => {
         </TouchableOpacity>
       )}
     </View>
+    </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

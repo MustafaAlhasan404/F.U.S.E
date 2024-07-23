@@ -16,15 +16,15 @@ type ThemeProviderProps = {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const systemTheme = Appearance.getColorScheme();
-  const initialTheme = systemTheme === 'light' || systemTheme === 'dark' ? systemTheme : 'light'; // Default to 'light' if 'no-preference'
+  const initialTheme: Theme = 'dark'; // Set the initial theme to 'dark'
   
   const [theme, setTheme] = useState<Theme>(initialTheme);
-  const [isThemeOverridden, setIsThemeOverridden] = useState<boolean>(false);
+  const [isThemeOverridden, setIsThemeOverridden] = useState<boolean>(true); // Set to true initially
 
   useEffect(() => {
     if (!isThemeOverridden) {
       const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-        const newTheme = colorScheme === 'light' || colorScheme === 'dark' ? colorScheme : 'light'; // Default to 'light' if 'no-preference'
+        const newTheme = colorScheme === 'light' || colorScheme === 'dark' ? colorScheme : 'dark'; // Default to 'dark' if 'no-preference'
         setTheme(newTheme);
       });
 
