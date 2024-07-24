@@ -2,6 +2,7 @@
 
 <figure style="text-align: center;">
   <img src="FUSE-EXPO/assets/Fourth.jpg" alt="FUSE" width="300" style="border-radius: 15px;"/>
+  <img src="FUSE-EXPO\assets\iVBORw0KGgoAAAANSUhEUgAABaQAAAt4CAYAAAAPGaGtAAAABGdBTUEAA1teXP8meAAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAAB 7.PNG" alt="FUSE" width="220" height="420"style="border-radius: 15px;"/>
 </figure>
 
 ## Overview
