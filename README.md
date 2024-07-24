@@ -1,9 +1,11 @@
 # Financial Universal Service Ecosystem
-
-<figure style="">
+<figure>
 <img src="FUSE-EXPO/assets/Fourth.jpg" alt="FUSE" width="450" he style="border-radius: 15px;"/>
+</figure>
+
+<figure align="center">
 <img src="FUSE-EXPO\assets\iPhone 15 Pro Max.png" alt="FUSE" width="" height="450"style="border-radius: 15px;"/>
-<img src="FUSE-EXPO\assets\iPhone 15 Pro Max-1.png-1" alt="FUSE" width="" height="450"style="border-radius: 15px;"/>
+<img src="FUSE-EXPO\assets\iPhone 15 Pro Max-1.png" alt="FUSE" width="" height="450"style="border-radius: 15px;"/>
 <img src="FUSE-EXPO\assets\iPhone 15 Pro Max-2.png" alt="FUSE" width="" height="450"style="border-radius: 15px;"/>
 <img src="FUSE-EXPO\assets\iPhone 15 Pro Max-3.png" alt="FUSE" width="" height="450"style="border-radius: 15px;"/>
 </figure>
