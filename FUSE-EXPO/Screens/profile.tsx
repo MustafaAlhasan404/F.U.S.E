@@ -138,7 +138,7 @@ const Profile = () => {
         <BottomTab navigation={navigation} />
   
         <Modal
-          animationType="slide"
+          animationType="fade" // Changed animation type to 'fade'
           transparent={true}
           visible={personalInfoModalVisible}
           onRequestClose={() => setPersonalInfoModalVisible(false)}
@@ -158,7 +158,6 @@ const Profile = () => {
                 </TouchableOpacity>
               </View>
               <ScrollView showsVerticalScrollIndicator={false}>
-                <InfoItem label="ID" value={user?.id} />
                 <InfoItem label="Name" value={user?.name} />
                 <InfoItem label="Email" value={user?.email} />
                 <InfoItem label="Phone" value={user?.checkingNumber} />
