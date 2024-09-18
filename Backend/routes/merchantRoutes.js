@@ -18,7 +18,7 @@ module.exports = router;
 
 // 1. You must have a merchant account in F.U.S.E. 
 // 2. Go to your profile and check your ID , "merchantId" = "ID"
-// 3. Make a POST req on https://3030-quiet-sunset-73461303.in-ws1.runcode.io/merchant/generate/bill ,with Body: {
+// 3. Make a POST req on https://f-u-s-e.onrender.com/merchant/generate/bill ,with Body: {
 // "merchantId": "ID",
 // "amount": (Integer) > 0,
 // "details": "you bill details"
@@ -27,5 +27,5 @@ module.exports = router;
 // 4. You will receive: { "billID":  (Integer) } 
 // 5. Use it to redirect user to https://payment-gateway-dashboard.vercel.app/:billID
 // 6. The user will pay the bill there
-// 7. To check the bill status req GET on https://3030-quiet-sunset-73461303.in-ws1.runcode.io/merchant/check/:billID
+// 7. To check the bill status req GET on https://f-u-s-e.onrender.com/merchant/check/:billID
 // 8. Only if you receive: { "status": "Paid" } the bill is paid
